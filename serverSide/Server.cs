@@ -40,6 +40,135 @@ namespace server_client_TCP
             handler.Send(random);
             Console.WriteLine("Showing avalible files to user...");
         }
+         private static void let_read_file(Socket handler, byte[] bytes)
+    {
+        show_files(handler);
+        
+        int bytes_for_file = handler.Receive(bytes);
+        string file = Encoding.ASCII.GetString(bytes, 0, bytes_for_file);
+        string full_path = "C:\\Users\\User\\Desktop\\testC#\\server\\server\\" + file;
+        if (File.Exists(full_path))
+        {
+            Console.WriteLine("User has chosen to write file ---> " + full_path);
+            string[] lines = System.IO.File.ReadAllLines(full_path);
+            string text = "";
+            foreach (string line in lines)
+            {
+                text += line + "\n";
+            }
+
+            byte[] bytes_for_second_message_ack = Encoding.ASCII.GetBytes(text);
+            handler.Send(bytes_for_second_message_ack);
+        }
+        else
+        {
+            Console.WriteLine("Trying to read a file that do now exist");
+            Console.WriteLine("File "+full_path+" do not exist");
+            byte[] bytes_for_second_message_ack = Encoding.ASCII.GetBytes("File do not exist!");
+            handler.Send(bytes_for_second_message_ack);
+        }
+    }
+    
+    private static void let_write_file(Socket handler, byte[] bytes)
+    {
+        show_files(handler);
+        byte[] msg = Encoding.ASCII.GetBytes("Name of file: C:\\Users\\User\\Desktop\\testC#\\server\\server\\");
+        handler.Send(msg);
+        
+        int bytes_for_file = handler.Receive(bytes);
+        string file_name = Encoding.ASCII.GetString(bytes, 0, bytes_for_file);
+        string full_path = "C:\\Users\\User\\Desktop\\testC#\\server\\server\\"+file_name;
+        Console.WriteLine("User has chosen to write file ---> "+full_path);
+
+        byte[] msg2 = Encoding.ASCII.GetBytes("What do you want to write: ");
+        handler.Send(msg2);
+        
+        int bytes_for_text = handler.Receive(bytes);
+        string text = Encoding.ASCII.GetString(bytes, 0, bytes_for_text);
+        Console.WriteLine("Adding text |:" + text + "| to file with path :" + full_path);
+        
+        using (StreamWriter sw = File.AppendText(full_path))
+        {
+            sw.WriteLine("\n");
+            sw.WriteLine(text);
+        }	
+
+        Console.WriteLine("Text:| "+ text+" | was written on : "+full_path);
+        byte[] confirmation = Encoding.ASCII.GetBytes("File was written successfully");
+        handler.Send(confirmation);    }
+    
+    public static void let_delete_file(Socket handler, byte[] bytes)
+    {
+        show_files(handler);
+        int bytes_for_file = handler.Receive(bytes);
+        string file = Encoding.ASCII.GetString(bytes, 0, bytes_for_file);
+        
+        string full_path = "C:\\Users\\User\\Desktop\\testC#\\server\\server\\" + file;
+        
+        Console.WriteLine("User has chosen to DELETE file ---> "+full_path);
+
+        string ALERT = "--ALERT-- This opreation is not reversible --ALERT--\n" +
+                       "Type YES to continue / Type any other key to cancel";
+        byte[] msg = Encoding.ASCII.GetBytes(ALERT);
+        handler.Send(msg);
+        
+        int alert_response_byte = handler.Receive(bytes);
+        string response = Encoding.ASCII.GetString(bytes, 0, alert_response_byte);
+        
+        if (response=="YES")
+        {
+            File.Delete(full_path);
+
+            byte[] confirmation = Encoding.ASCII.GetBytes("File was succesfully deleted");
+            handler.Send(confirmation);
+            Console.WriteLine("File "+full_path+" was deleted");
+        }
+        else
+        {
+            byte[] confirmation = Encoding.ASCII.GetBytes("Operation was CANCEL. File was not DELETED! ");
+            handler.Send(confirmation);
+            Console.WriteLine("Operation was CANCEL. File was not DELETED!" );
+        }
+    }
+    
+    private static bool is_admin(Socket handler)
+    {
+        byte[] bytes = new byte[2048];
+            
+        int bytes_for_role = handler.Receive(bytes);
+        string role = Encoding.ASCII.GetString(bytes, 0, bytes_for_role);
+
+        if (role == "admin")
+        {
+            byte[] msg2 = Encoding.ASCII.GetBytes("Write your password: ");
+            handler.Send(msg2);
+
+            int bytes_for_pw = handler.Receive(bytes);
+            string pw_recived = Encoding.ASCII.GetString(bytes, 0, bytes_for_pw); // pw from user
+            
+            if (pw_recived == "admin")
+            {
+                byte[] msg3 = Encoding.ASCII.GetBytes("AUTH COMPLETED SUCCESSFULLY");
+                handler.Send(msg3);
+                return true;
+            }
+            else
+            {
+                byte[] msg3 = Encoding.ASCII.GetBytes("WRONG PASSWORD. YOU DONT HAVE ACCESS AS ADMIN");
+                handler.Send(msg3);
+                return false;
+            }
+        }
+        
+        else
+        {
+            byte[] msg3 = Encoding.ASCII.GetBytes("CONTINUING AS GUEST");
+            handler.Send(msg3);
+            return false;
+
+        }
+    }
+    
         
         private static void Secure_canal_of_communication(Socket listener)
     {

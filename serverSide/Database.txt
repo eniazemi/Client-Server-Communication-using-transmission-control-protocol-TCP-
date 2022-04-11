@@ -1,0 +1,13 @@
+Server-side code can be written in any number of programming languages — 
+examples of popular server-side web languages include PHP, Python, Ruby, C#, and JavaScript (NodeJS).
+The server-side code has full access to the server operating system and the developer can 
+choose what programming language (and specific version) 
+they wish to use.
+Developers typically write their code using web frameworks.
+Web frameworks are collections of functions, objects, rules and other code constructs designed to solve common problems,
+speed up development, and simplify the different types of tasks faced in a particular domain.
+Server-side programming is very useful because it allows us to efficiently deliver information tailored for individual users and thereby create a much better user experience.
+
+Companies like Amazon use server-side programming to construct search results for products,
+make targeted product suggestions based on client preferences and previous
+buying habits, simplify purchases, etc.

@@ -1,0 +1,14 @@
+Server Side
+a server is a computer application,
+such as a web server, that runs on a remote server, reachable from a user's local computer,
+smartphone, or other device.
+In the context of the World Wide Web, commonly encountered server-side computer languages include:
+
+C# or Visual Basic in ASP.NET environments
+Java
+Perl
+PHP
+Python
+Ruby
+Node.js
+Swift

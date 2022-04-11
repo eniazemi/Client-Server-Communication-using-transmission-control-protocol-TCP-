@@ -1,0 +1,19 @@
+Server-side programming allows sites to restrict access to authorized users and serve only the information that a user is permitted to see.
+
+Real world examples include:
+
+Social networks like Facebook allow users to fully control their own data
+but only allow their friends to view or comment on it. The user determines who can see their data, 
+and by extension, whose data appears in their feed — authorization is a central part of the user experience!
+The site you are on right now controls access to content: articles are visible to everyone, but only users who have 
+logged in can edit them. To try this, click on the Edit button at the top of this page — if you are logged in you will be shown the edit view;
+
+if you are not logged in you will be taken to the sign-up page.
+Servers can send general or user-specific notifications through the website itself or via email, SMS, instant messaging,
+video conversations, or other communications services.
+
+A few examples include:
+
+Facebook and Twitter send emails and SMS messages to notify you of new communications.
+Amazon regularly sends product e-mails that suggest products similar to those already bought or viewed that you might be interested in.
+A web server might send warning messages to site administrators alerting them to low memory on the server, or suspicious user activity.
